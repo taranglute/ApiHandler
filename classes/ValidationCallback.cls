@@ -16,7 +16,7 @@ public virtual class ValidationCallback{
         public ApiWrapper.ResultWrapper ValidateField(string fieldvalue,object validation){
             ApiWrapper.ResultWrapper wrapper=new ApiWrapper.ResultWrapper();
             try{
-                if(validation!=null){
+                if(string.isNotBlank(fieldvalue) && validation!=null){
                     MasterValidation__c masterval=(MasterValidation__c)validation;
                     Boolean rs= this.isMatch(masterval.RegexExpression__c,fieldvalue);
                     if(!rs){
