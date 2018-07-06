@@ -15,9 +15,26 @@ Another important task is to deserialize valid JSON to an object. This object ca
   1. **Creating Wrapper** - In the case of multiple API, creating a wrapper for each API is not a good idea.
   2. **Managing Wrapper** - Managing fields i.e adding field or removing field or renaming field is tedious job.
 
-### How ApiHandler works ?
----------------------------------------------------
+### Getting Started with ApiHandler?
+-------------------------------------------------------
 API handler is driven by below three main objects -
 1. **API Configuration**- This object holds the core mapping details between incoming or passed JSON versus SObject fields.
 2. **FieldValidation**-  This is the Junction object between app validation and MasterValidation, to specify custom field level validation.
 3. **MasterValidation**- This is a master object which stores custom validation with the error message, regex expression, and callback method
+
+### Example
+---------------------------------------------------------
+Say you have Rest API know as *ContactAPI* to create a new contact. 
+Sample JSON for same.
+```
+{
+    "FirstName" : "Alex",
+    "LastName" : "Smith”,
+    "Email" : "Alex.Smith@ymail.com"
+}
+```
+Map all JSON properties with Contact fields. For that, create records in AppValidation object for all JSON Properties. following is for "Firstname". 
+**Points to Remember**
+  - When we create record for each json properties name field should be same i.e *ContactAPI*
+  - If you are marking field as isRequired then provide validation message as well.
+  
