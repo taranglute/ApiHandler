@@ -22,9 +22,8 @@ API handler is driven by below three main objects -
 2. **FieldValidation**-  This is the Junction object between app validation and MasterValidation, to specify custom field level validation.
 3. **MasterValidation**- This is a master object which stores custom validation with the error message, regex expression, and callback method
 
-### Example
+### Quick Guide
 ---------------------------------------------------------
-
 #### Creating Configuration Record
 Say you have Rest API know as *ContactAPI* to create a new contact. 
 Sample JSON for same.
@@ -50,3 +49,16 @@ Map all JSON properties with Contact fields. For that, create records in AppVali
 
 #### Adding multiple validation for fields
 Normally, we execute multiple validations for a JSON value. Email id is the common example where we check email formatting. This can be easily handled in API handler. To add multiple validations against a key, create a record in field validation object. This is a junction object of field id vs master validation id.
+  - **AppField** - Master-detail relationship between FieldValidation and AppValidation.
+  - **ValidationType**- Master-detail relationship between FieldValidation and MasterValidation
+
+#### Creating MasterValidation Records
+In the APIHandler, the user can create a set of master validations. Adding custom complex validation logic is also very easy. Below are the fields of MasterValidation objects.
+
+  - **MasterValidation Name**- Name of master validation.
+  - **RegexExpression**- Regular expression for data validation
+  - **Message Error**- Error message that need to return incase of error.
+  - **ValidatorCallback** - Apex method that would get invoked in order to validate field.
+  
+  **Sample Records in Master Validations**
+ ![MasterValidations](screenshots/MasterValidations.png?raw=true "MasterValidations")
