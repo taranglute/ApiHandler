@@ -33,8 +33,14 @@ Sample JSON for same.
     "Email" : "Alex.Smith@ymail.com"
 }
 ```
-Map all JSON properties with Contact fields. For that, create records in AppValidation object for all JSON Properties. following is for "Firstname". 
-**Points to Remember**
+**Sample Salesforce Record**
+
+![Configuration](screenshots/Configuration.png?raw=true "Configuration")
+
+Map all JSON properties with Contact fields. For that, create records in AppValidation object for all JSON Properties.
+**Note**
   - When we create record for each json properties name field should be same i.e *ContactAPI*
   - If you are marking field as isRequired then provide validation message as well.
-  
+
+**Sample record for multiple keys**
+![Configuration](screenshots/Configuration2.png?raw=true "Configuration")
