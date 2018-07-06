@@ -25,7 +25,7 @@ API handler is driven by below three main objects -
 ### Example
 ---------------------------------------------------------
 
-##### Creating Configuration Record
+#### Creating Configuration Record
 Say you have Rest API know as *ContactAPI* to create a new contact. 
 Sample JSON for same.
 ```
@@ -48,5 +48,5 @@ Map all JSON properties with Contact fields. For that, create records in AppVali
 
 ![Configuration](screenshots/Configuration2.png?raw=true "Configuration")
 
-##### Adding multiple validation for fields
+#### Adding multiple validation for fields
 Normally, we execute multiple validations for a JSON value. Email id is the common example where we check email formatting. This can be easily handled in API handler. To add multiple validations against a key, create a record in field validation object. This is a junction object of field id vs master validation id.
