@@ -15,7 +15,7 @@ Another important task is to deserialize valid JSON to an object. This object ca
   1. **Creating Wrapper** - In the case of multiple API, creating a wrapper for each API is not a good idea.
   2. **Managing Wrapper** - Managing fields i.e adding field or removing field or renaming field is tedious job.
 
-### Getting Started with ApiHandler?
+### Getting Started with ApiHandler
 -------------------------------------------------------
 API handler is driven by below three main objects -
 1. **API Configuration**- This object holds the core mapping details between incoming or passed JSON versus SObject fields.
