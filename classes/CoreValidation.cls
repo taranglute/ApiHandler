@@ -1,5 +1,5 @@
 /*
-* @Class[CoreValidation]- Class validated incoming json key values agnist configuration done in Salesforce.  
+* @Class[CoreValidation]- Class validated incoming json key values aganist configuration done in Salesforce.  
 * @author  Tarang L
 * @version 1.0 
 */
@@ -7,6 +7,7 @@ global with sharing class CoreValidation{
 
     public Map<String, Object> jsonInstance {get;set;}
     public Map<String, string> errorFields{get;set;}
+    public boolean hasErrors{get;set;}
     public static Map<String, List<MasterValidation__c>> MasterValidationMap{get;set;}
     
     Map<String, API_Configuration__c> FieldApiMap {get;set;}
@@ -29,13 +30,21 @@ global with sharing class CoreValidation{
             FieldApiMap=new Map<String, API_Configuration__c>();
             errorFields=new Map<String, string>();
             apiRequestType=requestType;
-            
+            hasErrors=false;
+            jsonInstance=new Map<String, Object>();
             if(string.isNotBlank(incomingJson)){
-                jsonInstance= (Map<String, Object>)JSON.deserializeUntyped(incomingJson);
+               // jsonInstance= (Map<String, Object>)JSON.deserializeUntyped(incomingJson);
+               //[KL:9/7/18]coverting json keys to lower case
+                Map<String, Object> jsonResponse=(Map<String, Object>)JSON.deserializeUntyped(incomingJson);
+                if(jsonResponse!=null){
+                for(String key:jsonResponse.keySet()){
+                    jsonInstance.put(key.toLowerCase(),jsonResponse.get(key));
+                }
+                }
                 LoadFieldConfiguration(requestType);
             }
         }catch(exception ex){
-            LogException('CoreValidation','Intialize',ex);
+            system.debug(ex.getMessage()+' '+ex.getLineNumber());
             throw ex;
         }
     }
@@ -73,7 +82,7 @@ global with sharing class CoreValidation{
                                 }
                                 when else {
                                     system.debug('#ApiName__c -'+apiDetails.ApiName__c);
-                                    sObj.put(apiDetails.ApiName__c, result);
+                                    sObj.put(apiDetails.ApiName__c, strResult.trim());
                                 }
                             }
                         }
@@ -85,21 +94,19 @@ global with sharing class CoreValidation{
             }
             return null;
         }catch(exception ex){
-            LogException('CoreValidation','ValidateJson',ex);
             throw ex;
         }
     }
     
-    void ValidateField(){
+    private void ValidateField(){
         try{
-            for (String key : jsonInstance.keySet()){
+            for(String key : FieldApiMap.keySet()){
                 string fieldname=key.toLowerCase();
                 API_Configuration__c apiDetails = FieldApiMap.get(fieldname);
-                if(apiDetails != null){
-                    string result= String.valueOf(jsonInstance.get(key));
-                    if(String.isBlank(result) && apiDetails.isRequired__c){
-                        errorFields.put(fieldname,'This field is required');
-                    }else{
+                string result= String.valueOf(jsonInstance.get(fieldname));
+                if(String.isBlank(result) && apiDetails.isRequired__c){
+                    errorFields.put(fieldname,'This field is required.');
+                }else if(jsonInstance.containsKey(fieldname)){
                         //check for other validations
                         if(MasterValidationMap.containsKey(fieldname)){
                            List<MasterValidation__c> lstvalidation=MasterValidationMap.get(fieldname);
@@ -117,19 +124,15 @@ global with sharing class CoreValidation{
                            }
                         }
                     }
-                }else{
-                    system.debug('Validation not found for field:'+fieldName);
-                }
             }
         }catch(exception ex){
-            LogException('CoreValidation','ValidateField',ex);
             throw ex;
         }
     }
     
     void LoadFieldConfiguration(string requestType){
         try{
-            MasterValidationMap = new Map<String, List<MasterValidation__c>>();
+            MasterValidationMap = new Map<String, List<MasterValidation__c>>();//Akash Modified 27/06
             for(API_Configuration__c validation : [SELECT FieldType__c,ValidationMessage__c, PropertyName__c, ApiName__c, isRequired__c, ObjectName__c, Default_Value__c, Name,(Select ValidationType__r.Name, ValidationType__r.Message__c,ValidationType__r.RegexExpression__c,ValidationType__r.ValidatorCallback__c from FieldValidations__r) FROM API_Configuration__c where Name=:requestType])
             {
                 if(String.isBlank(ObjectName)){
@@ -158,33 +161,7 @@ global with sharing class CoreValidation{
                 }
             }
         }catch(exception ex){
-            LogException('CoreValidation','LoadFieldConfiguration',ex);
             throw ex;
-        }
-    }
-    
-    /*Description - Methods log exception in custom object : logger.*/
-    void LogException(string classname,string methodname,exception ex){
-        try{
-            if(ex!=null){
-                ApiLog__c logger=new ApiLog__c(
-                    Classname__c=classname,
-                    MethodName__c=methodname,
-                    StackTrace__c=ex.getStackTraceString(),
-                    LineNumber__c=ex.getLineNumber(),
-                    ExceptionType__c=ex.getTypeName(),
-                    Message__c=ex.getMessage()
-                );
-                insert logger;
-            }else{
-                System.debug('Exception object cannot be null.Something went wrong.');    
-            }
-        }catch(exception e){
-            System.debug('Exception type caught: ' + e.getTypeName());    
-            System.debug('Message: ' + e.getMessage());    
-            System.debug('Cause: ' + e.getCause());    // returns null
-            System.debug('Line number: ' + e.getLineNumber());    
-            System.debug('Stack trace: ' + e.getStackTraceString());    
         }
     }
 }
