@@ -1,6 +1,7 @@
 # ApiHandler
-ApiHandler eases your tasks of validating JSON value attribute and returning the deserialized object which can be either processed for further actions or can be directly inserted into the Salesforce. In Rest API, JSON is the format used to share data. 
-Json is a human-readable text consisting of attributes, keys and values.Below is the usual implementation, we follow while working with API.
+ApiHandler eases your tasks of validating JSON value attribute and returning the deserialized object which can be either processed for further actions or can be directly inserted into the Salesforce. In Rest API and many other API, JSON is the format used to share data. 
+Json is a human-readable text consisting of attributes, keys and values. So validating JSON values is very important. Let's take a look
+at the usual implementation, we follow while working with API.
 
 ### Validating Incoming Data
 ------------------------------------------------------
