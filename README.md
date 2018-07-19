@@ -63,3 +63,15 @@ In the APIHandler, the user can create a set of master validations. Adding custo
   
   **Sample Records in Master Validations**
  ![MasterValidations](screenshots/MasterValidations.png?raw=true "MasterValidations")
+ 
+ **Validating Json in Apex**
+ ------------------------------------------------------
+ ```
+CoreValidation validation=new CoreValidation(); //Intialize corevalidation
+validation.Intialize(json,'ContactApi'); //Pass Json data and APIname
+sobject obj=validation.ValidateJson(); //Validatejson method returns SObject as result.
+if(validation.hasFieldErrors){
+    //logic to return error message
+    return validation.errorFields;
+}
+ ```
